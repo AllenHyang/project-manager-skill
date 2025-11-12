@@ -1,0 +1,23 @@
+{
+  "name": "project-manager",
+  "description": "Project management with enforced workflows - conversational input, rigorous validation, quality gates. Simple interface, impossible to produce low-quality output.",
+  "version": "3.7.0",
+  "author": {
+    "name": "Allen",
+    "email": "allen@example.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/project-manager-skill"
+  },
+  "license": "MIT",
+  "keywords": [
+    "project-management",
+    "task-tracking",
+    "adr",
+    "work-log",
+    "progress-report",
+    "quality-gates"
+  ],
+  "homepage": "https://github.com/your-org/project-manager-skill#readme"
+}
