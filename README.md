@@ -1,42 +1,110 @@
-# Project Manager Plugin V3.7
+# Project Manager V3.7 - Claude Code Plugin
 
-> Simple interface, rigorous process - Claude Code plugin for enforced project management workflows
+> Event-Driven Project Management with automatic work capture, quality gates, and enforced workflows
 
-## 🎯 Core Principle
+**严格同步自 Claude Code pm skill** - 仅按 plugin 要求重新组织结构。
 
-**Easy to use, impossible to produce low-quality output**
+## 🎯 核心特性
 
-- ✅ Conversational input (AI asks questions naturally)
-- ✅ Enforced standards (all outputs follow formats)
-- ✅ Quality gates (validation before critical operations)
-- ✅ State machines (traceable workflows)
+### Event-Driven Project Management
+- **自动工作捕获**: Hook-based 系统自动记录每次工具使用
+- **智能事件处理**: 智能分组和日志生成
+- **Know-How 提取**: AI 驱动的工作模式分析
+- **Git 分支集成**: 从分支名自动推断任务 ID (`task/123`)
 
-## ⚡ Quick Start
+### 任务管理 + 质量门控
+- **自然语言命令**: "创建任务：修复Bug"、"开始任务 123"
+- **质量检查系统**: 6 维度评估（60 分制）
+- **项目规则遵循**: 自动检查 `.task-context.md` 和 `.pm/task-rules.yaml`
+- **Pre-flight 检查**: 任务启动前的质量保证
 
-### Installation
+### 强制工作流 + 标准格式
+- **对话式输入**: AI 自然提问收集信息
+- **强制验证**: 保存前自动验证格式
+- **状态机**: 可追溯的工作流转换
+- **零容忍**: 不可能产生低质量输出
 
-1. Clone or download this repository
-2. Copy to Claude Code plugins directory:
+## 📦 安装
+
+### 1. 作为 Skill 和 Command 安装到 Claude Code
 
 ```bash
-# Copy the entire plugin directory
-cp -r project-manager-skill ~/.claude-code/plugins/project-manager
+# Clone 仓库
+git clone https://github.com/AllenHyang/project-manager-skill.git
+cd project-manager-skill
+
+# 安装 skill
+mkdir -p ~/.claude/skills
+cp -r skills/project-manager ~/.claude/skills/
+
+# 安装 command
+mkdir -p ~/.claude/commands
+cp commands/pm.md ~/.claude/commands/
+
+# 安装参考文档和提示词（可选但推荐）
+cp -r references ~/.claude/skills/project-manager/
+cp -r prompts ~/.claude/skills/project-manager/
 ```
 
-3. The plugin will be automatically loaded by Claude Code
+### 2. 初始化项目
 
-### First Use
+在你的项目目录下：
 
-Just type `/pm` in Claude Code:
+```bash
+# 方式 1: 运行初始化脚本
+/path/to/project-manager-skill/init-project.sh
+
+# 方式 2: 手动创建结构
+mkdir -p .project-log/{daily-logs,decisions,reports,knowhow,tasks}
+mkdir -p .pm/events
+```
+
+初始化后会创建：
+```
+your-project/
+├── .project-log/
+│   ├── daily-logs/          # 自动生成的日志
+│   ├── decisions/           # ADR 决策记录
+│   ├── reports/             # 生成的报告
+│   ├── knowhow/             # 提取的经验
+│   └── tasks/               # 任务管理
+│       └── tasks.json
+└── .pm/
+    ├── events/              # 事件捕获
+    └── context.json         # 当前上下文
+```
+
+## 🚀 快速开始
+
+### 方式 1: 任务管理工作流（推荐）
+
+```bash
+# 在 Claude Code 中使用自然语言
+"创建任务：修复邮件同步超时"
+→ AI 创建任务并自动进行质量检查
+
+"开始任务 5"
+→ AI 启动任务，创建 Git 分支，运行 pre-flight 检查
+
+"暂停任务"
+→ AI 暂停当前任务
+
+"完成任务"
+→ AI 完成任务并记录
+
+# 或使用命令行
+pm task create "修复Bug"
+pm task start 5
+pm task pause
+pm task done
+```
+
+### 方式 2: 工作日志 + ADR 工作流
+
+在 Claude Code 中输入 `/pm`:
 
 ```
 📊 Project Manager - Enforced Workflow
-
-Current Status:
-- 📝 Last log: (none yet)
-- 🏗️ Recent ADRs: 0 documented decisions
-- 📊 Last report: (none yet)
-- ⚠️ Validation status: Pass
 
 Available actions:
 1. 📝 Log today's work        (/pm log)
@@ -44,193 +112,193 @@ Available actions:
 3. 📊 Generate report         (/pm report)
 4. 🔍 Check project status    (/pm status)
 5. ✅ Validate project data   (/pm validate)
-
-What would you like to do?
 ```
 
-## 📋 Commands
+### 工作回顾
 
-### `/pm` - Interactive Menu
-Shows project status and available actions.
+```bash
+# 在 Claude Code 中
+"回顾今天的工作"
 
-### `/pm log` - Log Work
-Conversational work logging with enforced standards.
-
-**Example:**
-```
-You: /pm log
-
-AI: 今天完成了什么？类型是：
-    1. 完成任务 (task)
-    2. 修复bug (bug)
-    3. 代码重构 (refactor)
-    4. 性能优化 (optimization)
-
-You: 修复bug
-
-AI: 具体是什么bug？
-
-You: 邮件同步超时
-
-AI: 怎么解决的？遇到了什么挑战？
-
-You: 添加了30s超时和重试机制，挑战是要兼容不同邮箱
-
-AI: ✅ 工作已记录！
-    类型: Bug修复
-    标题: 修复邮件同步超时bug
-    位置: .project-log/daily-logs/2025-11/2025-11-05.md
-    标准格式验证: ✅ 通过
+# 或使用命令
+pm review
 ```
 
-### `/pm decide` - Document Decision
-Create Architecture Decision Records with enforced completeness.
+显示：
+- Git commits
+- 完成的任务
+- Daily logs
+- 捕获的 Know-How
 
-**Example:**
-```
-You: /pm decide
+## 📋 主要命令
 
-AI: 要记录什么技术决策？
+### 任务管理
 
-You: 选择数据库
+| 自然语言 | 命令 | 说明 |
+|---------|------|------|
+| "创建任务：{title}" | `pm task create "{title}"` | 创建并自动质量检查 |
+| "开始任务 123" | `pm task start 123` | 启动任务 + Git 分支 |
+| "暂停任务" | `pm task pause` | 暂停当前任务 |
+| "完成任务" | `pm task done` | 完成当前任务 |
+| "查看任务 123" | `pm task show 123` | 查看任务详情 |
+| "列出任务" | `pm task list` | 列出所有任务 |
 
-AI: 决定用什么？
+### 工作记录
 
-You: PostgreSQL
+| 命令 | 说明 |
+|------|------|
+| `/pm log` | 对话式工作日志（Bug/Task/Refactor） |
+| `/pm decide` | 创建 ADR 决策记录 |
+| `/pm report` | 生成报告（日报/周报/月报）|
+| `/pm status` | 项目健康仪表板 |
+| `/pm validate` | 手动运行验证套件 |
 
-AI: 考虑过哪些其他方案？优缺点是什么？
+### 回顾与提取
 
-You: 考虑过MongoDB，但需要事务支持
+| 命令 | 说明 |
+|------|------|
+| `pm review` | 查看今天的工作总结 |
+| `pm auto-extract` | 提取 Know-How |
+| `pm list-drafts` | 列出 Know-How 草稿 |
 
-AI: ✅ ADR created and validated!
-    ADR-0001: Choose PostgreSQL for database
-    Location: .project-log/decisions/0001-choose-postgresql-for-database.md
-    Standard compliance: ✅ All required sections present
-```
+## 🎯 工作流示例
 
-### `/pm report` - Generate Report
-Generate progress reports with mandatory validation.
+### 完整的任务工作流
 
-**Key Feature:** Cannot generate reports if validation fails.
+```bash
+# 1. 创建任务
+"创建一个 urgent 任务：修复登录崩溃"
+→ ✅ 任务 #5 已创建
+→ 🔍 自动质量检查：45/60 分（良好）
+→ 💡 建议：补充复现步骤和验收标准
 
-```
-You: /pm report
+# 2. 完善任务
+"更新任务 5，补充 Bug 信息"
+→ AI 智能生成完整的描述（基于上下文）
 
-AI: 生成什么类型的报告？
-    1. 日报 (daily)
-    2. 周报 (weekly)
-    3. 月报 (monthly)
+# 3. 启动任务
+"开始任务 5"
+→ ✅ Git 分支创建: task/5-fix-login-crash
+→ ✅ Pre-flight 检查通过
+→ ✅ 任务 #5 已启动
 
-You: 周报
+# 4. 开发过程（自动捕获）
+[编辑代码、运行测试...]
+→ Hook 自动捕获所有工具使用
 
-AI: 🔒 Quality Gate: Pre-report Validation
-    Running comprehensive validation...
-    📝 Daily Logs: ✅ No gaps in last 7 days
-    🏗️ ADRs: ✅ All have required sections
-    ✅ Validation passed! Proceeding to report generation.
+# 5. 完成任务
+"完成任务"
+→ ✅ 任务 #5 已完成
+→ 📝 工作已记录到 daily-logs
 
-    ✅ 周报已生成！
-    Location: .project-log/reports/weekly-2025-11-05.md
-```
-
-### `/pm status` - Check Status
-Display project health dashboard with quality metrics.
-
-### `/pm validate` - Validate Data
-Run comprehensive validation suite manually.
-
-## 📁 Directory Structure
-
-All project data is stored in `.project-log/`:
-
-```
-project-root/
-└── .project-log/
-    ├── daily-logs/              # Work logs by date
-    │   └── 2025-11/
-    │       └── 2025-11-05.md
-    ├── decisions/               # ADRs (sequential)
-    │   ├── 0001-decision-title.md
-    │   └── 0002-another-decision.md
-    ├── reports/                 # Generated reports
-    │   ├── weekly-2025-11-05.md
-    │   └── .metadata/           # State machine data
-    └── .validation/             # Validation results
+# 6. 回顾工作
+"回顾今天的工作"
+→ 显示完整的工作总结和 Know-How
 ```
 
-## 🔒 Enforced Quality Gates
+## 🔒 质量门控
 
-### For Logs
-- ✅ Must have: type, title, details, impact
-- ✅ Type must be: task, bug, refactor, or optimization
-- ✅ Must describe: what, why, challenges, impact
+### 任务质量检查（6 维度）
 
-### For ADRs
-- ✅ Must have: all 4 sections (Context, Decision, Alternatives, Consequences)
-- ✅ Must compare: 2+ alternatives with pros/cons
-- ✅ Must document: BOTH positive AND negative consequences
-- ✅ Cannot save incomplete ADRs
+创建任务后自动检查：
 
-### For Reports
-- ✅ MANDATORY: Run validation before generating
-- ✅ BLOCK: If validation fails
-- ✅ Must use: Report state machine (no bypassing)
-- ✅ Must save: metadata with state transitions
+1. **基本完整性** (10 分): 标题、描述、优先级
+2. **目的清晰度** (10 分): 明确的目标和背景
+3. **类型特定要求** (10 分): Bug 需要复现步骤，Feature 需要用户故事
+4. **验收标准** (10 分): 清晰的完成标准
+5. **项目规则遵循** (10 分): 符合 `.pm/task-rules.yaml`
+6. **最新关注对齐** (10 分): 符合 `.task-context.md` 的要求
 
-## 💡 Key Features
+**评分等级：**
+- 🟢 优秀 (50-60): 可以开始
+- 🟡 良好 (40-49): 建议改进
+- 🟠 及格 (30-39): 需要改进
+- 🔴 不足 (<30): 强烈建议改进
 
-### 1. Conversational BUT Structured
-- User inputs naturally in conversation
-- AI structures data internally to standard format
-- Enforced validation before saving
+### 工作日志强制要求
 
-### 2. Never Bypass Quality Gates
-```
-❌ DO NOT:
-- Skip validation "to save time"
-- Generate reports without validation
-- Create ADRs without all sections
-- Save incomplete logs
+- ✅ 必须包含: type, title, details, impact
+- ✅ 类型: task, bug, refactor, optimization
+- ✅ 必须描述: 做了什么、为什么、挑战、影响
 
-✅ ALWAYS:
-- Run validation before reports
-- Block if validation fails
-- Require all standard sections
-- Enforce state machine transitions
-```
+### ADR 强制要求
 
-### 3. State Machines
-Reports follow strict state transitions:
-```
-DRAFT → VALIDATING → GENERATING → PUBLISHED
-           ↓
-        INVALID (if validation fails)
+- ✅ 必须有 4 个部分: Context, Decision, Alternatives, Consequences
+- ✅ 必须比较 2+ 个方案及其优缺点
+- ✅ 必须记录正面和负面影响
+
+### 报告强制验证
+
+- ✅ 生成前必须运行验证
+- ✅ 验证失败则阻止生成
+- ✅ 使用状态机: DRAFT → VALIDATING → GENERATING → PUBLISHED
+
+## 🛠️ 工具脚本
+
+### check-sync.sh - 同步检查
+
+验证 plugin 与 Claude Code pm skill 的一致性：
+
+```bash
+./check-sync.sh
 ```
 
-## 🔧 Configuration
+显示所有文件的同步状态（一致/不一致/缺失）。
 
-The plugin works out of the box with sensible defaults. No configuration required.
+### init-project.sh - 项目初始化
 
-## 📖 Documentation
+在新项目中初始化目录结构：
 
-- **SKILL.md**: Complete skill definition for Claude Code
-- **commands/pm.md**: Detailed command documentation with workflows
+```bash
+./init-project.sh
+```
 
-## 🤝 Integration
+创建 `.project-log/` 和 `.pm/` 完整结构。
 
-This plugin is based on the full [Project Manager Skill](https://github.com/your-org/project-manager) and adapted for Claude Code plugin architecture.
+## 📖 文档
 
-For the complete skill with Python scripts, hooks, and advanced features, see the original repository.
+- **[SKILL.md](skills/project-manager/SKILL.md)**: 完整的 Skill 定义（466 行）
+- **[commands/pm.md](commands/pm.md)**: /pm 命令文档（349 行）
+- **[references/commands.md](references/commands.md)**: 完整命令参考
+- **[references/troubleshooting.md](references/troubleshooting.md)**: 故障排查指南
+- **[references/workflow.md](references/workflow.md)**: 详细工作流文档
+- **[prompts/task-quality-gate.md](prompts/task-quality-gate.md)**: 质量检查框架
+
+## 🔄 与原始 Skill 的关系
+
+这个 plugin 是 **严格复制** Claude Code 的 pm skill：
+
+```bash
+# 原始位置
+~/.claude/skills/project-manager/  # Skill
+~/.claude/commands/pm.md            # Command
+
+# Plugin 结构
+skills/project-manager/SKILL.md    # 100% 相同
+commands/pm.md                      # 100% 相同
+references/                         # Bundled resources
+prompts/                            # Bundled resources
+```
+
+使用 `./check-sync.sh` 验证一致性。
+
+## 🚧 系统要求
+
+- **Claude Code**: 支持 Skills 和 Commands
+- **Git**: 用于分支管理和任务 ID 推断
+- **Bash**: 用于运行脚本
 
 ## 📝 License
 
-MIT License - see LICENSE file for details
+MIT License - see [LICENSE](LICENSE) for details
 
 ## 🆘 Support
 
-For issues or questions, please open an issue in the repository.
+- **Issues**: https://github.com/AllenHyang/project-manager-skill/issues
+- **原始 Skill**: https://github.com/your-org/project-manager
 
 ---
 
 **Version:** 3.7.0
 **Last Updated:** 2025-11-12
+**Sync Status:** ✅ 100% 与 Claude Code pm skill 同步
