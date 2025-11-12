@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-org/project-manager-skill"
+    "url": "https://github.com/AllenHyang/project-manager-skill"
   },
   "license": "MIT",
   "keywords": [
@@ -17,7 +17,9 @@
     "adr",
     "work-log",
     "progress-report",
-    "quality-gates"
+    "quality-gates",
+    "event-driven",
+    "natural-language"
   ],
-  "homepage": "https://github.com/your-org/project-manager-skill#readme"
+  "homepage": "https://github.com/AllenHyang/project-manager-skill#readme"
 }

@@ -26,7 +26,29 @@
 
 ## 📦 安装
 
-### 1. 作为 Skill 和 Command 安装到 Claude Code
+### 方式 1: 通过 Plugin 系统安装（推荐）
+
+在 Claude Code 中运行：
+
+```bash
+# 1. 添加 marketplace
+/plugin marketplace add AllenHyang/project-manager-skill
+
+# 2. 安装 plugin
+/plugin install project-manager@AllenHyang/project-manager-skill
+
+# 3. 重启 Claude Code 以加载 plugin
+```
+
+或者使用交互式菜单：
+```bash
+/plugin
+# 选择 "Browse Plugins" 并安装 project-manager
+```
+
+### 方式 2: 手动安装（高级用户）
+
+如果你想手动管理 skill 和 command：
 
 ```bash
 # Clone 仓库
@@ -41,12 +63,12 @@ cp -r skills/project-manager ~/.claude/skills/
 mkdir -p ~/.claude/commands
 cp commands/pm.md ~/.claude/commands/
 
-# 安装参考文档和提示词（可选但推荐）
+# 安装参考文档和提示词（推荐）
 cp -r references ~/.claude/skills/project-manager/
 cp -r prompts ~/.claude/skills/project-manager/
 ```
 
-### 2. 初始化项目
+### 初始化项目
 
 在你的项目目录下：
 
