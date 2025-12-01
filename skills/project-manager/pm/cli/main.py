@@ -151,6 +151,9 @@ def cmd_upgrade():
             return 1
 
     print(f"\n✅ Upgraded to version {remote_version}")
+    print("")
+    print("💡 If you have projects using pm, run 'pm init' in each project")
+    print("   to update the slash commands.")
     return 0
 
 
