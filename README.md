@@ -1,8 +1,8 @@
-# Project Manager V3.7 - Claude Code Plugin
+# Project Manager V4.0 - Claude Code Skill
 
 > Event-Driven Project Management with automatic work capture, quality gates, and enforced workflows
 
-**严格同步自 Claude Code pm skill** - 仅按 plugin 要求重新组织结构。
+一个 Claude Code Skill，提供项目管理、任务跟踪和工作日志功能。
 
 ## 🎯 核心特性
 
@@ -26,46 +26,46 @@
 
 ## 📦 安装
 
-### 方式 1: 通过 Plugin 系统安装（推荐）
-
-在 Claude Code 中运行：
+### 快速安装（推荐）
 
 ```bash
-# 1. 添加 marketplace
-/plugin marketplace add AllenHyang/project-manager-skill
-
-# 2. 安装 plugin
-/plugin install project-manager@AllenHyang/project-manager-skill
-
-# 3. 重启 Claude Code 以加载 plugin
-```
-
-或者使用交互式菜单：
-```bash
-/plugin
-# 选择 "Browse Plugins" 并安装 project-manager
-```
-
-### 方式 2: 手动安装（高级用户）
-
-如果你想手动管理 skill 和 command：
-
-```bash
-# Clone 仓库
+# 1. Clone 仓库
 git clone https://github.com/AllenHyang/project-manager-skill.git
 cd project-manager-skill
 
-# 安装 skill
+# 2. 运行安装脚本
+./install.sh
+
+# 3. 验证安装
+pm help
+```
+
+安装脚本会自动完成：
+1. 复制 Skill 文件到 `~/.claude/skills/project-manager/`
+2. 通过 `pip install -e` 安装 `pm` 命令（editable 模式）
+3. 验证安装是否成功
+
+### 手动安装
+
+如果你想手动控制安装过程：
+
+```bash
+# 1. 复制 Skill 到 Claude 目录
 mkdir -p ~/.claude/skills
 cp -r skills/project-manager ~/.claude/skills/
 
-# 安装 command
-mkdir -p ~/.claude/commands
-cp commands/pm.md ~/.claude/commands/
+# 2. 安装 pm CLI
+cd ~/.claude/skills/project-manager
+pip install -e .
 
-# 安装参考文档和提示词（推荐）
-cp -r references ~/.claude/skills/project-manager/
-cp -r prompts ~/.claude/skills/project-manager/
+# 3. 验证
+pm help
+```
+
+### 卸载
+
+```bash
+./uninstall.sh
 ```
 
 ### 初始化项目
@@ -73,12 +73,8 @@ cp -r prompts ~/.claude/skills/project-manager/
 在你的项目目录下：
 
 ```bash
-# 方式 1: 运行初始化脚本
-/path/to/project-manager-skill/init-project.sh
-
-# 方式 2: 手动创建结构
-mkdir -p .project-log/{daily-logs,decisions,reports,knowhow,tasks}
-mkdir -p .pm/events
+# 使用 pm 命令初始化
+pm init
 ```
 
 初始化后会创建：
@@ -114,11 +110,9 @@ your-project/
 "完成任务"
 → AI 完成任务并记录
 
-# 或使用命令行
-pm task create "修复Bug"
-pm task start 5
-pm task pause
-pm task done
+# 使用 CLI 查看状态
+pm status
+pm task list
 ```
 
 ### 方式 2: 工作日志 + ADR 工作流
@@ -142,8 +136,8 @@ Available actions:
 # 在 Claude Code 中
 "回顾今天的工作"
 
-# 或使用命令
-pm review
+# 或使用 slash 命令
+/pm/review
 ```
 
 显示：
@@ -154,34 +148,45 @@ pm review
 
 ## 📋 主要命令
 
-### 任务管理
+### PM CLI 命令
 
-| 自然语言 | 命令 | 说明 |
-|---------|------|------|
-| "创建任务：{title}" | `pm task create "{title}"` | 创建并自动质量检查 |
-| "开始任务 123" | `pm task start 123` | 启动任务 + Git 分支 |
-| "暂停任务" | `pm task pause` | 暂停当前任务 |
-| "完成任务" | `pm task done` | 完成当前任务 |
-| "查看任务 123" | `pm task show 123` | 查看任务详情 |
-| "列出任务" | `pm task list` | 列出所有任务 |
-
-### 工作记录
+`pm` 命令行工具提供基础操作：
 
 | 命令 | 说明 |
 |------|------|
-| `/pm log` | 对话式工作日志（Bug/Task/Refactor） |
-| `/pm decide` | 创建 ADR 决策记录 |
-| `/pm report` | 生成报告（日报/周报/月报）|
-| `/pm status` | 项目健康仪表板 |
-| `/pm validate` | 手动运行验证套件 |
+| `pm init` | 初始化项目结构 |
+| `pm status` | 显示项目状态 |
+| `pm task list` | 列出所有任务 |
+| `pm upgrade` | 检查并安装更新 |
+| `pm version` | 显示版本号 |
+| `pm help` | 显示帮助信息 |
 
-### 回顾与提取
+### Claude Code 自然语言命令
+
+在 Claude Code 中使用自然语言进行完整的任务管理：
+
+| 自然语言 | 说明 |
+|---------|------|
+| "创建任务：{title}" | 创建并自动质量检查 |
+| "开始任务 123" | 启动任务 + Git 分支 |
+| "暂停任务" | 暂停当前任务 |
+| "完成任务" | 完成当前任务 |
+| "查看任务 123" | 查看任务详情 |
+| "列出任务" | 列出所有任务 |
+| "回顾今天的工作" | 工作总结 |
+
+### Claude Code Slash 命令
 
 | 命令 | 说明 |
 |------|------|
-| `pm review` | 查看今天的工作总结 |
-| `pm auto-extract` | 提取 Know-How |
-| `pm list-drafts` | 列出 Know-How 草稿 |
+| `/pm` | 打开项目管理菜单 |
+| `/pm/task/create` | 创建新任务 |
+| `/pm/task/start` | 开始任务 |
+| `/pm/task/done` | 完成任务 |
+| `/pm/task/list` | 列出所有任务 |
+| `/pm/status` | 快速状态检查 |
+| `/pm/review` | 每日工作回顾 |
+| `/pm/adr/create` | 创建架构决策记录 |
 
 ## 🎯 工作流示例
 
@@ -257,55 +262,42 @@ pm review
 
 ## 🛠️ 工具脚本
 
-### check-sync.sh - 同步检查
-
-验证 plugin 与 Claude Code pm skill 的一致性：
-
-```bash
-./check-sync.sh
-```
-
-显示所有文件的同步状态（一致/不一致/缺失）。
-
-### init-project.sh - 项目初始化
-
-在新项目中初始化目录结构：
-
-```bash
-./init-project.sh
-```
-
-创建 `.project-log/` 和 `.pm/` 完整结构。
+| 脚本 | 说明 |
+|------|------|
+| `install.sh` | 安装 Skill 和 pm CLI |
+| `uninstall.sh` | 卸载 |
+| `init-project.sh` | 在项目中初始化 `.project-log/` 和 `.pm/` 结构 |
 
 ## 📖 文档
 
-- **[SKILL.md](skills/project-manager/SKILL.md)**: 完整的 Skill 定义（466 行）
-- **[commands/pm.md](commands/pm.md)**: /pm 命令文档（349 行）
+- **[SKILL.md](skills/project-manager/SKILL.md)**: 完整的 Skill 定义
+- **[INSTALL.md](INSTALL.md)**: 详细安装指南
 - **[references/commands.md](references/commands.md)**: 完整命令参考
-- **[references/troubleshooting.md](references/troubleshooting.md)**: 故障排查指南
 - **[references/workflow.md](references/workflow.md)**: 详细工作流文档
-- **[prompts/task-quality-gate.md](prompts/task-quality-gate.md)**: 质量检查框架
+- **[references/troubleshooting.md](references/troubleshooting.md)**: 故障排查指南
 
-## 🔄 与原始 Skill 的关系
+## 🏗️ 项目结构
 
-这个 plugin 是 **严格复制** Claude Code 的 pm skill：
-
-```bash
-# 原始位置
-~/.claude/skills/project-manager/  # Skill
-~/.claude/commands/pm.md            # Command
-
-# Plugin 结构
-skills/project-manager/SKILL.md    # 100% 相同
-commands/pm.md                      # 100% 相同
-references/                         # Bundled resources
-prompts/                            # Bundled resources
 ```
-
-使用 `./check-sync.sh` 验证一致性。
+project-manager-skill/
+├── skills/project-manager/       # Claude Code Skill
+│   ├── SKILL.md                  # Skill 定义
+│   ├── pm/                       # Python CLI 包
+│   │   ├── __init__.py
+│   │   └── cli/
+│   │       └── main.py           # CLI 入口
+│   └── setup.py                  # pip 安装配置
+├── commands/pm/                  # Slash 命令
+├── bin/pm                        # Bash 脚本（legacy）
+├── install.sh                    # 安装脚本
+├── uninstall.sh                  # 卸载脚本
+└── init-project.sh               # 项目初始化脚本
+```
 
 ## 🚧 系统要求
 
+- **Python**: 3.7+
+- **pip**: 用于安装 CLI
 - **Claude Code**: 支持 Skills 和 Commands
 - **Git**: 用于分支管理和任务 ID 推断
 - **Bash**: 用于运行脚本
@@ -317,10 +309,8 @@ MIT License - see [LICENSE](LICENSE) for details
 ## 🆘 Support
 
 - **Issues**: https://github.com/AllenHyang/project-manager-skill/issues
-- **原始 Skill**: https://github.com/your-org/project-manager
 
 ---
 
-**Version:** 3.7.0
-**Last Updated:** 2025-11-12
-**Sync Status:** ✅ 100% 与 Claude Code pm skill 同步
+**Version:** 4.0.0
+**Last Updated:** 2025-12-01
